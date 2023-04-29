@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: mongo:5.0.5
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: voluntable
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - "27011:27017"
+
+  voluntable:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DB_CONNECTION_STRING: mongodb://root:root@db:27011/voluntable?authSource=admin
+      DB_NAME: voluntable
+      DSN: DSN
+    ports:
+      - "3255:3000"
